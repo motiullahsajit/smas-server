@@ -57,7 +57,7 @@ exports.checkserver = (req, res, next) => {
 exports.register = async (req, res) => {
   try {
     const alredyUsed = await User.find({ email: req.body.email });
-    if (alredyUsed) {
+    if (alredyUsed.length > 0) {
       return res.status(201).json({ success: false, message: 'Email already used in another account' });
     } else {
       const user = await new User(req.body);
