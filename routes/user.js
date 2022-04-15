@@ -2,6 +2,7 @@ const router = require('express').Router();
 const C = require('../controllers/user');
 
 router.get('/check', C.checkserver);
+router.get('/all', C.allUsers);
 router.post('/register', C.register);
 router.post('/login', C.login);
 router.post('/getUser', C.getUser);

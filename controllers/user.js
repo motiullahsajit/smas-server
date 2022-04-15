@@ -56,13 +56,18 @@ exports.checkserver = (req, res, next) => {
 
 exports.register = async (req, res) => {
   try {
-    const user = await new User(req.body);
-    user.save();
+    const alredyUsed = await User.find({ email: req.body.email });
+    if (alredyUsed) {
+      return res.status(201).json({ success: false, message: 'Email already used in another account' });
+    } else {
+      const user = await new User(req.body);
+      user.save();
 
-    return res.status(200).json({
-      success: true,
-      user: user
-    });
+      return res.status(200).json({
+        success: true,
+        user: user
+      });
+    }
   }
   catch (err) {
     return res.json({ success: false, err });
@@ -84,6 +89,19 @@ exports.login = async (req, res) => {
     }
   } catch (err) {
     return res.status(403).json({ loginSuccess: false, err: err });
+  }
+};
+
+exports.allUsers = async (req, res) => {
+  try {
+    const users = await User.find({})
+    return res.status(200).json({
+      success: true,
+      users: users
+    })
+
+  } catch (err) {
+    return res.json({ success: false, err });
   }
 };
 
