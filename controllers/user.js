@@ -78,14 +78,17 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const user = await User.findOne({ email: req.body.email })
-    // console.log('user', user)
-    if (user && user.password === req.body.password) {
-      return res.status(200).json({
-        success: true,
-        user: user
-      })
+    if (user) {
+      if (user && user.password === req.body.password) {
+        return res.status(200).json({
+          success: true,
+          user: user
+        })
+      } else {
+        return res.status(201).json({ success: false, message: 'Wrong Password' });
+      }
     } else {
-      return res.status(201).json({ success: false, message: 'Wrong Password' });
+      return res.status(201).json({ success: false, message: 'Account Not found' });
     }
   } catch (err) {
     return res.status(403).json({ loginSuccess: false, err: err });
